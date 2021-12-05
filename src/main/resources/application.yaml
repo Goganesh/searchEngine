@@ -1,0 +1,21 @@
+pagessourse: https://tsybyrny.ru/ , https://www.lideradvokat.ru/
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  liquibase:
+    change-log: classpath:db/changelog/changelog-root.xml
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+        format_sql: true
