@@ -8,7 +8,7 @@
       http://www.liquibase.org/xml/ns/pro
       http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
 
-    <changeSet  author="basiladze-gt"  id="init-data">
+    <changeSet id="init-data-fields" author="basiladze-gt">
         <insert tableName="fields">
             <column  name="id"  value="51000bd6-471a-11ec-81d3-0242ac130003"/>
             <column  name="name"  value="title"/>
@@ -21,6 +21,19 @@
             <column  name="name"  value="body"/>
             <column  name="selector"  value="body"/>
             <column  name="weight"  value="0.8"/>
+        </insert>
+    </changeSet>
+    <changeSet id="init-data-sites" author="basiladze-gt">
+        <insert tableName="sites">
+            <column name="id" value="9c1c7404-f113-4988-81b8-47edb62be1f8"/>
+            <column name="url" value="http://yuksha.rdfdfu/" />
+            <column name="name" value="Адковат"/>
+        </insert>
+
+        <insert tableName="sites">
+            <column name="id" value="73362497-97cd-4d3e-bf87-46dc438c8664"/>
+            <column name="url" value="http://yuksha.ru/" />
+            <column name="name" value="Адковат"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

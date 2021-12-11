@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Data
@@ -26,4 +23,8 @@ public class Lemma {
     private String lemma;
 
     private int frequency;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "site_id", nullable = false)
+    private Site site;
 }

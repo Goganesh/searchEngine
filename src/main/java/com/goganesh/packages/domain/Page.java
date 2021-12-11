@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -26,8 +25,9 @@ public class Page implements Comparable<Page> {
 
     private String content;
 
-    @OneToMany(mappedBy = "page")
-    private Set<Index> indexes;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "site_id", nullable = false)
+    private Site site;
 
     @Override
     public int compareTo(Page o) {

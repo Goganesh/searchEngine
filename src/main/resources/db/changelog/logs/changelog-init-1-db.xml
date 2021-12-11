@@ -7,7 +7,26 @@
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
       http://www.liquibase.org/xml/ns/pro
       http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
-    <changeSet  author="basiladze-gt"  id="init-db">
+    <changeSet id="init-db" author="basiladze-gt">
+
+        <createTable tableName="sites" remarks="сайты">
+            <column  name="id"  type="UUID">
+                <constraints  nullable="false"  primaryKey="true"  unique="true"/>
+            </column>
+            <column  name="status"  type="VARCHAR(255)" defaultValue="NEW" remarks="статус индексации сайта">
+                <constraints  nullable="false"/>
+            </column>
+            <column  name="status_time" defaultValueComputed="NOW()" type="DATETIME" remarks="дата и время статуса">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="last_error" type="VARCHAR(255)" remarks="текст ошибки индексации"/>
+            <column  name="url"  type="VARCHAR(255)" remarks="адрес главной страницы сайта">
+                <constraints  nullable="false" unique="true"/>
+            </column>
+            <column  name="name"  type="VARCHAR(255)" remarks="имя сайта">
+                <constraints  nullable="false"/>
+            </column>
+        </createTable>
 
         <createTable tableName="pages" remarks="проиндексированная страница">
             <column  name="id"  type="UUID">
@@ -20,6 +39,24 @@
                 <constraints  nullable="false"/>
             </column>
             <column  name="content"  type="VARCHAR" remarks="контент страницы (HTML-код)">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="site_id" type="UUID" remarks="идентификатор сайта">
+                <constraints  nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="lemmas" remarks="леммы, встречающиеся в текстах">
+            <column  name="id"  type="UUID">
+                <constraints  nullable="false"  primaryKey="true"  unique="true"/>
+            </column>
+            <column name="lemma" type="VARCHAR(255)" remarks="нормальная форма слова">
+                <constraints  nullable="false"/>
+            </column>
+            <column  name="frequency"  type="INTEGER" remarks="количество страниц, на которых слово встречается хотя бы один раз">
+                <constraints  nullable="false"/>
+            </column>
+            <column name="site_id" type="UUID" remarks="идентификатор сайта">
                 <constraints  nullable="false"/>
             </column>
         </createTable>
@@ -39,18 +76,6 @@
             </column>
         </createTable>
 
-        <createTable tableName="lemmas" remarks="леммы, встречающиеся в текстах">
-            <column  name="id"  type="UUID">
-                <constraints  nullable="false"  primaryKey="true"  unique="true"/>
-            </column>
-            <column name="lemma" type="VARCHAR(255)" remarks="нормальная форма слова">
-                <constraints  nullable="false"/>
-            </column>
-            <column  name="frequency"  type="INTEGER" remarks="количество страниц, на которых слово встречается хотя бы один раз">
-                <constraints  nullable="false"/>
-            </column>
-        </createTable>
-
         <createTable tableName="indexes" remarks="поисковый индекс">
             <column  name="id"  type="UUID">
                 <constraints  nullable="false"  primaryKey="true"  unique="true"/>
@@ -66,8 +91,40 @@
             </column>
         </createTable>
 
+        <addForeignKeyConstraint baseColumnNames="page_id"
+                                 baseTableName="indexes"
+                                 constraintName="fk_indexes_page_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="pages"/>
+
+        <addForeignKeyConstraint baseColumnNames="lemma_id"
+                                 baseTableName="indexes"
+                                 constraintName="fk_indexes_lemma_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="lemmas"/>
+
+        <addForeignKeyConstraint baseColumnNames="site_id"
+                                 baseTableName="pages"
+                                 constraintName="fk_pages_site_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sites"/>
+
+        <addForeignKeyConstraint baseColumnNames="site_id"
+                                 baseTableName="lemmas"
+                                 constraintName="fk_lemmas_site_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="sites"/>
+
         <createIndex indexName="pages_path_index" tableName="pages">
             <column name="path"/>
+        </createIndex>
+
+        <createIndex indexName="indexes_page_id_index" tableName="indexes">
+            <column name="page_id"/>
+        </createIndex>
+
+        <createIndex indexName="indexes_lemma_id_index" tableName="indexes">
+            <column name="lemma_id"/>
         </createIndex>
 
     </changeSet>

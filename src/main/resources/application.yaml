@@ -1,4 +1,11 @@
-pagessourse: https://tsybyrny.ru/ , https://www.lideradvokat.ru/
+search-bot:
+  user-agent: GoganeshSearchBot
+  referer: http://www.google.com
+  delay: 250
+
+logging:
+  level:
+    root: INFO
 server:
   port: 8080
 spring:
@@ -13,7 +20,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         jdbc:

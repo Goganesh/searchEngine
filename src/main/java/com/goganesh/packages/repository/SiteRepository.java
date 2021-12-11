@@ -1,13 +1,9 @@
 package com.goganesh.packages.repository;
 
-import com.goganesh.packages.domain.Page;
 import com.goganesh.packages.domain.Site;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.UUID;
 
-public interface PageRepository extends JpaRepository<Page, UUID> {
-
-    List<Page> findBySite(Site site);
+public interface SiteRepository extends JpaRepository<Site, UUID> {
 }
