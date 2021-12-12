@@ -1,9 +1,6 @@
 package com.goganesh.packages.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -14,7 +11,7 @@ import java.util.UUID;
 @Table(name = "PAGES")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Page implements Comparable<Page> {
+public class Page {
     @Id
     @GeneratedValue
     private UUID id;
@@ -27,12 +24,8 @@ public class Page implements Comparable<Page> {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "site_id", nullable = false)
+    @EqualsAndHashCode.Exclude
     private Site site;
-
-    @Override
-    public int compareTo(Page o) {
-        return this.getPath().compareTo(o.getPath());
-    }
 
     @Override
     public String toString() {
@@ -42,4 +35,6 @@ public class Page implements Comparable<Page> {
                 ", code=" + code +
                 '}';
     }
+
+
 }

@@ -1,8 +1,9 @@
 package com.goganesh.packages.service.implementation;
 
-import com.goganesh.packages.domain.Lemma;
+import com.goganesh.packages.domain.Index;
 import com.goganesh.packages.exception.LemmaException;
-import com.goganesh.packages.repository.LemmaRepository;
+import com.goganesh.packages.exception.NoIndexFoundException;
+import com.goganesh.packages.service.IndexService;
 import com.goganesh.packages.service.LemmaService;
 import lombok.AllArgsConstructor;
 import org.apache.lucene.morphology.LuceneMorphology;
@@ -21,21 +22,24 @@ public class LemmaServiceImpl implements LemmaService {
     private static final String SOUZ = "СОЮЗ";
     private static final String MEZDOMETIE = "МЕЖД";
 
-    private final LemmaRepository lemmaRepository;
-
-    @Override
-    public Lemma findByLemma(String lemma){
-        return lemmaRepository.findByLemma(lemma);
-    }
-
-    @Override
-    public Lemma save(Lemma lemma) {
-        return lemmaRepository.save(lemma);
-    }
+    private final IndexService indexService;
 
     @Override
     public Set<String> getLemmasByText(String text) throws IOException {
         return getLemmasCountByText(text).keySet();
+    }
+
+    @Override
+    public Map<String, Integer> getLemmasFrequency(Set<String> lemmas) {
+        Map<String, Integer> lemmasFrequency = new HashMap<>();
+
+        lemmas.stream()
+                .map(indexService::findByLemma)
+                //.filter() //exception
+                .flatMap(List::stream)
+                .forEach(index -> lemmasFrequency.merge(index.getLemma(), 1 , Integer::sum));
+
+        return lemmasFrequency;
     }
 
     @Override

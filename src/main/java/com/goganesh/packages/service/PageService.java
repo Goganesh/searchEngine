@@ -14,13 +14,10 @@ public interface PageService {
     Set<Page> parseAllPagesByUrl(String url) throws IOException;
     Page parsePageByUrl(String url);
     void indexPage(Page page);
+    void dropIndexPage(Page page);
     Map<String, Float> findRatedLemmasByPage(Page page) throws IOException;
 
-    List<Page> findPagesBySearchText(String searchText);
-
     List<Page> saveAll(Iterable<Page> pages);
-    List<Page> findAll();
     List<Page> findBySite(Site site);
-    Page findById(UUID id);
 
 }

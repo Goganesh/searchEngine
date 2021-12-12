@@ -46,21 +46,6 @@
             </column>
         </createTable>
 
-        <createTable tableName="lemmas" remarks="леммы, встречающиеся в текстах">
-            <column  name="id"  type="UUID">
-                <constraints  nullable="false"  primaryKey="true"  unique="true"/>
-            </column>
-            <column name="lemma" type="VARCHAR(255)" remarks="нормальная форма слова">
-                <constraints  nullable="false"/>
-            </column>
-            <column  name="frequency"  type="INTEGER" remarks="количество страниц, на которых слово встречается хотя бы один раз">
-                <constraints  nullable="false"/>
-            </column>
-            <column name="site_id" type="UUID" remarks="идентификатор сайта">
-                <constraints  nullable="false"/>
-            </column>
-        </createTable>
-
         <createTable tableName="fields" remarks="поля на страницах сайтов">
             <column  name="id"  type="UUID">
                 <constraints  nullable="false"  primaryKey="true"  unique="true"/>
@@ -83,7 +68,7 @@
             <column name="page_id" type="UUID" remarks="идентификатор страницы">
                 <constraints  nullable="false"/>
             </column>
-            <column  name="lemma_id"  type="UUID" remarks="идентификатор леммы">
+            <column  name="lemma"  type="VARCHAR(255)" remarks="лемма">
                 <constraints  nullable="false"/>
             </column>
             <column  name="rank"  type="FLOAT" remarks="ранг леммы на этой страницы">
@@ -97,21 +82,9 @@
                                  referencedColumnNames="id"
                                  referencedTableName="pages"/>
 
-        <addForeignKeyConstraint baseColumnNames="lemma_id"
-                                 baseTableName="indexes"
-                                 constraintName="fk_indexes_lemma_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="lemmas"/>
-
         <addForeignKeyConstraint baseColumnNames="site_id"
                                  baseTableName="pages"
                                  constraintName="fk_pages_site_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="sites"/>
-
-        <addForeignKeyConstraint baseColumnNames="site_id"
-                                 baseTableName="lemmas"
-                                 constraintName="fk_lemmas_site_id"
                                  referencedColumnNames="id"
                                  referencedTableName="sites"/>
 
@@ -123,8 +96,8 @@
             <column name="page_id"/>
         </createIndex>
 
-        <createIndex indexName="indexes_lemma_id_index" tableName="indexes">
-            <column name="lemma_id"/>
+        <createIndex indexName="indexes_lemma_index" tableName="indexes">
+            <column name="lemma"/>
         </createIndex>
 
     </changeSet>

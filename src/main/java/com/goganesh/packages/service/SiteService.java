@@ -9,9 +9,8 @@ public interface SiteService {
 
     void parseSite(Site site);
     void indexSite(Site site);
+    void dropIndexSite(Site site);
 
     Site save(Site site);
-    List<Site> saveAll(Iterable<Site> sites);
     List<Site> findAll();
-    Site findById(UUID id);
 }

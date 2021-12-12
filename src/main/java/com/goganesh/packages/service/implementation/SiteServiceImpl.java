@@ -4,7 +4,6 @@ import com.goganesh.packages.domain.Page;
 import com.goganesh.packages.domain.Site;
 import com.goganesh.packages.exception.BadBaseUrlException;
 import com.goganesh.packages.exception.IndexErrorException;
-import com.goganesh.packages.exception.NoSiteFoundException;
 import com.goganesh.packages.repository.SiteRepository;
 import com.goganesh.packages.service.PageService;
 import com.goganesh.packages.service.SiteService;
@@ -17,7 +16,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +26,21 @@ public class SiteServiceImpl implements SiteService {
 
     private final SiteRepository siteRepository;
     private final PageService pageService;
+
+    @Override
+    public void dropIndexSite(Site site) {
+        LOGGER.info("Start index site - " + site);
+        pageService.findBySite(site)
+                .forEach(pageService::dropIndexPage);
+
+        site.setStatus(Site.Status.NEW);
+        site.setStatusTime(LocalDateTime.now());
+        site.setLastError("");
+
+        siteRepository.save(site);
+
+        LOGGER.info("Finish index site - " + site);
+    }
 
     @Override
     public void indexSite(Site site) {
@@ -53,7 +66,7 @@ public class SiteServiceImpl implements SiteService {
         LOGGER.info("Start parse site - " + site);
 
         Set<Page> checkedPages;
-        Site.Status status = Site.Status.PARSED;
+        Site.Status status = Site.Status.INDEXING;
         String error = "";
 
         try {
@@ -75,12 +88,6 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public Site findById(UUID id) {
-        return siteRepository.findById(id)
-                .orElseThrow(() -> new NoSiteFoundException("No site found with id - " + id));
-    }
-
-    @Override
     public List<Site> findAll() {
         return siteRepository.findAll();
     }
@@ -90,13 +97,8 @@ public class SiteServiceImpl implements SiteService {
         return siteRepository.save(site);
     }
 
-    @Override
-    public List<Site> saveAll(Iterable<Site> sites) {
-        return siteRepository.saveAll(sites);
-    }
-
     private List<Page> getPagesForIndexBySite(Site site) {
-        if (!site.getStatus().equals(Site.Status.PARSED)) {
+        if (!site.getStatus().equals(Site.Status.INDEXING)) {
             throw new IndexErrorException("Site has bad status for index " + site);
         }
 

@@ -24,9 +24,7 @@ public class Index {
     @JoinColumn(name = "page_id")
     private Page page;
 
-    @ManyToOne
-    @JoinColumn(name = "lemma_id")
-    private Lemma lemma;
+    private String lemma;
 
     private float rank;
 }

@@ -1,14 +1,11 @@
 package com.goganesh.packages.service.implementation;
 
 import com.goganesh.packages.domain.*;
-import com.goganesh.packages.exception.BadBaseUrlException;
 import com.goganesh.packages.exception.LemmaException;
-import com.goganesh.packages.exception.NoPageFoundException;
 import com.goganesh.packages.repository.FieldRepository;
 import com.goganesh.packages.repository.PageRepository;
 import com.goganesh.packages.service.*;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,7 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 
 @Service
@@ -34,7 +31,8 @@ public class PageServiceImpl implements PageService {
 
     @Override
     public Set<Page> parseAllPagesByUrl(String url) {
-        Set<Page> checkedPages = new ConcurrentSkipListSet();
+        Set<Page> checkedPages = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        //ConcurrentSkipListSet();
         Page page = parsePageByUrl(url);
 
         checkedPages.add(page);
@@ -47,6 +45,12 @@ public class PageServiceImpl implements PageService {
         LOGGER.info("URL " + url + " processed, unique links - " + checkedPages.size());
 
         return pages;
+    }
+
+    @Override
+    public void dropIndexPage(Page page) {
+        indexService.findByPage(page)
+                .forEach(indexService::delete);
     }
 
     @Override
@@ -68,41 +72,17 @@ public class PageServiceImpl implements PageService {
             return;
         }
         for (Map.Entry<String, Float> entry : ratedLemmas.entrySet()) {
-            String key = entry.getKey();
+            String lemma = entry.getKey();
             Float rate = entry.getValue();
 
-            Lemma lemma = lemmaService.findByLemma(key);
-
-
-            if (Objects.isNull(lemma)) {
-                lemma = new Lemma();
-                lemma.setFrequency(1);
-                lemma.setLemma(key);
-            } else {
-                int count = lemma.getFrequency() + 1;
-                lemma.setFrequency(count);
-            }
-            lemma.setSite(page.getSite());
-            lemmaService.save(lemma);
-
-            Index index = new Index();
-            index.setPage(page);
-            index.setLemma(lemma);
-            index.setRank(rate);
+            Index index = Index.builder()
+                    .page(page)
+                    .lemma(lemma)
+                    .rank(rate)
+                    .build();
 
             indexService.save(index);
         }
-    }
-
-    @SneakyThrows
-    @Override
-    public List<Page> findPagesBySearchText(String searchText) {
-        Map<String, Integer> lemmas = lemmaService.getLemmasCountByText(searchText);
-        //TODO Исключать леммы, которые встречаются на слишком большом количестве страниц (определите этот процент самостоятельно)
-
-        //TODO Сортировать леммы в порядке увеличения частоты встречаемости (по возрастанию значения поля frequency) — от самых редких до самых частых.
-
-        return null;
     }
 
     @Override
@@ -137,18 +117,8 @@ public class PageServiceImpl implements PageService {
     }
 
     @Override
-    public List<Page> findAll() {
-        return pageRepository.findAll();
-    }
-
-    @Override
     public List<Page> findBySite(Site site) {
         return pageRepository.findBySite(site);
     }
 
-    @Override
-    public Page findById(UUID id) {
-        return pageRepository.findById(id)
-                .orElseThrow(() -> new NoPageFoundException("No page found with id - " + id));
-    }
 }
