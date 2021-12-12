@@ -38,12 +38,12 @@ public class SearchEngineApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        siteService.findAll().forEach(siteService::parseSite);
-        siteService.findAll().forEach(System.out::println);
+        //siteService.findAll().forEach(siteService::parseSite);
+        //siteService.findAll().forEach(System.out::println);
 
-        siteService.findAll().forEach(siteService::indexSite);
+        //siteService.findAll().forEach(siteService::indexSite);
 
-        siteService.findAll().forEach(System.out::println);
+        //siteService.findAll().forEach(System.out::println);
 
 
         //String searchText = "Наличие сообщества науки";
