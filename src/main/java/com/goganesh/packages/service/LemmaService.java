@@ -9,4 +9,5 @@ public interface LemmaService {
     Map<String, Integer> getLemmasCountByText(String text) throws IOException;
     Set<String> getLemmasByText(String text) throws IOException;
     Map<String, Integer> getLemmasFrequency(Set<String> lemmas);
+    long countLemmas();
 }

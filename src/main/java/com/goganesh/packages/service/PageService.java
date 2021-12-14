@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 public interface PageService {
 
@@ -19,5 +18,5 @@ public interface PageService {
 
     List<Page> saveAll(Iterable<Page> pages);
     List<Page> findBySite(Site site);
-
+    long countPages();
 }

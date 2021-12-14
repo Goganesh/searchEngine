@@ -1,10 +1,10 @@
 package com.goganesh.packages.service;
 
-import com.goganesh.packages.dto.PageDto;
+import com.goganesh.packages.dto.SearchResult;
 
 import java.util.List;
 
 public interface SearchService {
 
-    List<PageDto> findPagesDtoBySearchText(String searchText);
+    List<SearchResult> findPagesDtoBySearchText(String searchText);
 }

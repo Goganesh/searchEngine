@@ -107,4 +107,9 @@ public class SiteServiceImpl implements SiteService {
                 .filter(page -> page.getCode() == 200)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public long countSites() {
+        return siteRepository.count();
+    }
 }

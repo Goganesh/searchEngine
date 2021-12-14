@@ -26,3 +26,7 @@ spring:
         jdbc:
           batch_size: 50
         format_sql: true
+
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui.html

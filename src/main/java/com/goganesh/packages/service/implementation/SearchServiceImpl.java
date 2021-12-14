@@ -2,7 +2,7 @@ package com.goganesh.packages.service.implementation;
 
 import com.goganesh.packages.domain.Index;
 import com.goganesh.packages.domain.Page;
-import com.goganesh.packages.dto.PageDto;
+import com.goganesh.packages.dto.SearchResult;
 import com.goganesh.packages.service.IndexService;
 import com.goganesh.packages.service.LemmaService;
 import com.goganesh.packages.service.SearchService;
@@ -24,7 +24,7 @@ public class SearchServiceImpl implements SearchService {
 
     @SneakyThrows
     @Override
-    public List<PageDto> findPagesDtoBySearchText(String searchText) {
+    public List<SearchResult> findPagesDtoBySearchText(String searchText) {
         Set<String> searchLemmas = lemmaService.getLemmasByText(searchText);
 
         Map<String, Integer> lemmasFrequency = lemmaService.getLemmasFrequency(searchLemmas);
@@ -57,7 +57,7 @@ public class SearchServiceImpl implements SearchService {
         if (finalPages.isEmpty())
             return new ArrayList<>();
 
-        List<PageDto> rankedPages = new ArrayList<>();
+        List<SearchResult> rankedPages = new ArrayList<>();
 
         for (Page page : finalPages) {
             Float finalRank = indexService.findByPage(page)
@@ -67,24 +67,24 @@ public class SearchServiceImpl implements SearchService {
                     .reduce(Float::sum)
                     .orElse(0f);
 
-            PageDto pageDto = convertToDto(page);
-            pageDto.setRelevanceAbs(finalRank);
+            SearchResult searchResult = convertToDto(page);
+            searchResult.setRelevanceAbs(finalRank);
 
-            rankedPages.add(pageDto);
+            rankedPages.add(searchResult);
         }
 
         return rankedPages;
     }
 
-    private PageDto convertToDto(Page page){
-        PageDto pageDto = new PageDto();
+    private SearchResult convertToDto(Page page){
+        SearchResult searchResult = new SearchResult();
 
-        pageDto.setTitle(webParser.getTextByPageAndField(page,"title"));
-        pageDto.setUri(page.getPath());
+        searchResult.setTitle(webParser.getTextByPageAndField(page,"title"));
+        searchResult.setUri(page.getPath());
         //pageDto.setSnippet();
         //pageDto.setRelevanceAbs();
         //pageDto.setRelevanceRel();
 
-        return pageDto;
+        return searchResult;
     }
 }

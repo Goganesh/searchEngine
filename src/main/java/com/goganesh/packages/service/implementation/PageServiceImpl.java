@@ -37,7 +37,7 @@ public class PageServiceImpl implements PageService {
 
         checkedPages.add(page);
 
-        Set<Page> pages = new ForkJoinPool().invoke(new RecursiveDomainReader(checkedPages,
+        Set<Page> pages = new ForkJoinPool().invoke(new RecursivePageParser(checkedPages,
                 page,
                 this,
                 webParser));
@@ -121,4 +121,8 @@ public class PageServiceImpl implements PageService {
         return pageRepository.findBySite(site);
     }
 
+    @Override
+    public long countPages(){
+        return pageRepository.count();
+    }
 }

@@ -8,10 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -19,8 +16,8 @@ import java.util.concurrent.RecursiveTask;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class RecursiveDomainReader extends RecursiveTask<Set<Page>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RecursiveDomainReader.class);
+public class RecursivePageParser extends RecursiveTask<Set<Page>> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RecursivePageParser.class);
 
     private final Set<Page> checkedPages;
     private final Page page;
@@ -39,7 +36,7 @@ public class RecursiveDomainReader extends RecursiveTask<Set<Page>> {
                 .filter(link -> !currentLinks.contains(link))
                 .collect(Collectors.toSet());
 
-        List<RecursiveDomainReader> taskList = new ArrayList<>();
+        List<RecursivePageParser> taskList = new ArrayList<>();
 
         for (String url : newLinks) {
             Page page;
@@ -51,12 +48,12 @@ public class RecursiveDomainReader extends RecursiveTask<Set<Page>> {
             }
             checkedPages.add(page);
 
-            RecursiveDomainReader task = new RecursiveDomainReader(checkedPages, page, pageService, webParser);
+            RecursivePageParser task = new RecursivePageParser(checkedPages, page, pageService, webParser);
             task.fork();
             taskList.add(task);
         }
 
-        for (RecursiveDomainReader task : taskList) {
+        for (RecursivePageParser task : taskList) {
             Set<Page> links = task.join();
             checkedPages.addAll(links);
 
