@@ -27,13 +27,13 @@
         <insert tableName="sites">
             <column name="id" value="9c1c7404-f113-4988-81b8-47edb62be1f8"/>
             <column name="url" value="http://yuksha.rdfdfu/" />
-            <column name="name" value="Адковат"/>
+            <column name="name" value="Адвокат Янис Юкша"/>
         </insert>
 
         <insert tableName="sites">
             <column name="id" value="73362497-97cd-4d3e-bf87-46dc438c8664"/>
             <column name="url" value="http://yuksha.ru/" />
-            <column name="name" value="Адковат"/>
+            <column name="name" value="Адвокат Янис Юкша"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goganesh.packages.domain.Index;
 import com.goganesh.packages.domain.Site;
 import com.goganesh.packages.dto.Detailed;
+import com.goganesh.packages.dto.SearchResult;
 import com.goganesh.packages.dto.Statistics;
 import com.goganesh.packages.dto.Total;
 import com.goganesh.packages.exception.ActiveProcessException;
@@ -13,10 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZoneOffset;
 import java.util.HashMap;
@@ -40,6 +38,7 @@ public class ApiController {
     private final PageService pageService;
     private final IndexService indexService;
     private final LemmaService lemmaService;
+    private final SearchService searchService;
 
     @SneakyThrows
     @GetMapping("/startIndexing")
@@ -122,8 +121,8 @@ public class ApiController {
                             .status(site.getStatus().toString())
                             .statusTime(site.getStatusTime().toEpochSecond(ZoneOffset.UTC))
                             .error(site.getLastError())
-                            .pages(pageService.findBySite(site).size())
-                            .lemmas(pageService.findBySite(site)
+                            .pages(site.getPages().size())
+                            .lemmas(site.getPages()
                                     .stream()
                                     .map(indexService::findByPage)
                                     .flatMap(List::stream)
@@ -144,10 +143,23 @@ public class ApiController {
         return new ObjectMapper().writeValueAsString(result);
     }
 
+    @SneakyThrows
     @GetMapping("/search")
-    public String search() {
-        //todo
-        return "somedata";
+    public String search(@RequestParam String query,
+                         @RequestParam(required = false) String site,
+                         @RequestParam int offset,
+                         @RequestParam int limit) {
+        //todo поиск по сайту
+        List<SearchResult> searchResults = searchService.getSearchResult(query);
+
+        Map<String, Object> result = new HashMap<>(){{
+            put("result", true);
+        }};
+        result.put("count", searchResults.size());
+        result.put("data", searchResults);
+        //todo пагинация
+
+        return new ObjectMapper().writeValueAsString(result);
     }
 
 }

@@ -24,7 +24,7 @@ public class SearchServiceImpl implements SearchService {
 
     @SneakyThrows
     @Override
-    public List<SearchResult> findPagesDtoBySearchText(String searchText) {
+    public List<SearchResult> getSearchResult(String searchText) {
         Set<String> searchLemmas = lemmaService.getLemmasByText(searchText);
 
         Map<String, Integer> lemmasFrequency = lemmaService.getLemmasFrequency(searchLemmas);
@@ -67,8 +67,15 @@ public class SearchServiceImpl implements SearchService {
                     .reduce(Float::sum)
                     .orElse(0f);
 
-            SearchResult searchResult = convertToDto(page);
-            searchResult.setRelevanceAbs(finalRank);
+            SearchResult searchResult = SearchResult.builder()
+                    .uri(page.getPath())
+                    .siteName(page.getSite().getName())
+                    .site(page.getSite().getUrl())
+                    .title(webParser.getTextByPageAndField(page,"title"))
+                    .snippet("TODO") //todo
+                    .relevance(finalRank) //todo
+                    .build();
+            searchResult.setRelevance(finalRank);
 
             rankedPages.add(searchResult);
         }
@@ -76,15 +83,4 @@ public class SearchServiceImpl implements SearchService {
         return rankedPages;
     }
 
-    private SearchResult convertToDto(Page page){
-        SearchResult searchResult = new SearchResult();
-
-        searchResult.setTitle(webParser.getTextByPageAndField(page,"title"));
-        searchResult.setUri(page.getPath());
-        //pageDto.setSnippet();
-        //pageDto.setRelevanceAbs();
-        //pageDto.setRelevanceRel();
-
-        return searchResult;
-    }
 }
