@@ -78,10 +78,13 @@ public class LemmaServiceImpl implements LemmaService {
     private List<String> getClearWordsByText(String text) throws IOException {
         LuceneMorphology luceneMorph = new RussianLuceneMorphology();
 
-        return Arrays.stream(text.toLowerCase()
+        return Arrays.stream(
+                text.toLowerCase()
                         .replaceAll("[,.!?:]", "")
                         .replaceAll("[\n]", " ")
-                        .split(" "))
+                        .split(" ")
+                )
+                .map(String::trim)
                 .filter(luceneMorph::checkString)
                 .collect(Collectors.toList());
     }

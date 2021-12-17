@@ -2,7 +2,9 @@ package com.goganesh.packages.service.implementation;
 
 import com.goganesh.packages.domain.Page;
 import com.goganesh.packages.exception.BadBaseUrlException;
+import com.goganesh.packages.exception.StopActiveProcessException;
 import com.goganesh.packages.service.PageService;
+import com.goganesh.packages.service.ProcessService;
 import com.goganesh.packages.service.WebParser;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,10 +25,15 @@ public class RecursivePageParser extends RecursiveTask<Set<Page>> {
     private final Page page;
     private final PageService pageService;
     private final WebParser webParser;
+    private final ProcessService processService;
 
     @SneakyThrows
     @Override
     protected Set<Page> compute() {
+        if (!processService.isProcessActive(ProcessService.Type.INDEX)){
+            LOGGER.debug("Index site was interrupted - page parsing " + page);
+            throw new StopActiveProcessException("Index site was interrupted");
+        }
         Set<String> currentLinks = checkedPages.stream()
                 .map(Page::getPath)
                 .collect(Collectors.toSet());
@@ -48,7 +55,13 @@ public class RecursivePageParser extends RecursiveTask<Set<Page>> {
             }
             checkedPages.add(page);
 
-            RecursivePageParser task = new RecursivePageParser(checkedPages, page, pageService, webParser);
+            RecursivePageParser task = new RecursivePageParser(
+                    checkedPages,
+                    page,
+                    pageService,
+                    webParser,
+                    processService
+            );
             task.fork();
             taskList.add(task);
         }

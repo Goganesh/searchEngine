@@ -2,6 +2,7 @@ package com.goganesh.packages.service.implementation;
 
 import com.goganesh.packages.domain.Index;
 import com.goganesh.packages.domain.Page;
+import com.goganesh.packages.domain.Site;
 import com.goganesh.packages.dto.SearchResult;
 import com.goganesh.packages.service.IndexService;
 import com.goganesh.packages.service.LemmaService;
@@ -24,14 +25,13 @@ public class SearchServiceImpl implements SearchService {
 
     @SneakyThrows
     @Override
-    public List<SearchResult> getSearchResult(String searchText) {
+    public List<SearchResult> getSearchResultBySite(String searchText, Site site) {
         Set<String> searchLemmas = lemmaService.getLemmasByText(searchText);
 
         Map<String, Integer> lemmasFrequency = lemmaService.getLemmasFrequency(searchLemmas);
 
-        //Кроме того, рекомендуется исключать леммы, которые встречаются на слишком
-        //большом количестве страниц (определите этот процент самостоятельно).
-        //todo
+        //todo Кроме того, рекомендуется исключать леммы, которые встречаются на слишком
+        // большом количестве страниц (определите этот процент самостоятельно).
 
         List<String> sortedLemmas = lemmasFrequency
                 .entrySet()
@@ -46,6 +46,7 @@ public class SearchServiceImpl implements SearchService {
                 .map(indexService::findByLemma)
                 .flatMap(List::stream)
                 .map(Index::getPage)
+                .filter(page -> page.getSite().equals(site))
                 .forEach(page -> pagesCount.merge(page, 1, Integer::sum));
 
         Set<Page> finalPages = pagesCount.entrySet()
@@ -72,8 +73,8 @@ public class SearchServiceImpl implements SearchService {
                     .siteName(page.getSite().getName())
                     .site(page.getSite().getUrl())
                     .title(webParser.getTextByPageAndField(page,"title"))
-                    .snippet("TODO") //todo
-                    .relevance(finalRank) //todo
+                    .snippet("TODO") //todo требуется выполнить
+                    .relevance(finalRank) //todo требуется выполнить
                     .build();
             searchResult.setRelevance(finalRank);
 

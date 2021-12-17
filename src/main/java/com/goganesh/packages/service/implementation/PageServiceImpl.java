@@ -2,6 +2,7 @@ package com.goganesh.packages.service.implementation;
 
 import com.goganesh.packages.domain.*;
 import com.goganesh.packages.exception.LemmaException;
+import com.goganesh.packages.exception.StopActiveProcessException;
 import com.goganesh.packages.repository.FieldRepository;
 import com.goganesh.packages.repository.PageRepository;
 import com.goganesh.packages.service.*;
@@ -14,7 +15,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 @AllArgsConstructor
@@ -28,22 +31,24 @@ public class PageServiceImpl implements PageService {
     private final LemmaService lemmaService;
     private final IndexService indexService;
     private final FieldRepository fieldRepository;
+    private final ProcessService processService;
 
     @Override
     public Set<Page> parseAllPagesByUrl(String url) {
-        Set<Page> checkedPages = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        //ConcurrentSkipListSet();
+        Set<Page> checkedPages = Collections.newSetFromMap(new ConcurrentHashMap<>());//ConcurrentSkipListSet();
         Page page = parsePageByUrl(url);
 
         checkedPages.add(page);
 
-        Set<Page> pages = new ForkJoinPool().invoke(new RecursivePageParser(checkedPages,
+        Set<Page> pages = new ForkJoinPool().invoke(new RecursivePageParser(
+                checkedPages,
                 page,
                 this,
-                webParser));
+                webParser,
+                processService)
+        );
 
         LOGGER.info("URL " + url + " processed, unique links - " + checkedPages.size());
-
         return pages;
     }
 
@@ -51,6 +56,7 @@ public class PageServiceImpl implements PageService {
     public void dropIndexPage(Page page) {
         indexService.findByPage(page)
                 .forEach(indexService::delete);
+        pageRepository.delete(page);
     }
 
     @Override
@@ -64,10 +70,15 @@ public class PageServiceImpl implements PageService {
 
     @Override
     public void indexPage(Page page) {
+        if (!processService.isProcessActive(ProcessService.Type.INDEX)){
+            LOGGER.debug("Index site was interrupted - page parsing " + page);
+            throw new StopActiveProcessException("Index site was interrupted");
+        }
+
         Map<String, Float> ratedLemmas;
         try {
             ratedLemmas = findRatedLemmasByPage(page);
-        } catch (LemmaException | IOException le) {
+        } catch (LemmaException | IOException e) {
             //TODO log
             return;
         }
@@ -124,5 +135,15 @@ public class PageServiceImpl implements PageService {
     @Override
     public long countPages(){
         return pageRepository.count();
+    }
+
+    @Override
+    public Page save(Page page) {
+        return pageRepository.save(page);
+    }
+
+    @Override
+    public Optional<Page> findByPath(String path) {
+        return pageRepository.findByPath(path);
     }
 }
