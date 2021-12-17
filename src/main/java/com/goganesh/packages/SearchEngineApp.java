@@ -1,6 +1,5 @@
 package com.goganesh.packages;
 
-import com.goganesh.packages.service.*;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @AllArgsConstructor
 public class SearchEngineApp implements CommandLineRunner {
-    private final SiteService siteService;
-    private final SearchService searchService;
-    private final IndexService indexService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchEngineApp.class);
 

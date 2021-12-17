@@ -1,13 +1,9 @@
 package com.goganesh.packages.service.implementation;
 
-import com.goganesh.packages.domain.Index;
 import com.goganesh.packages.exception.LemmaException;
-import com.goganesh.packages.exception.NoIndexFoundException;
 import com.goganesh.packages.repository.IndexRepository;
-import com.goganesh.packages.repository.PageRepository;
 import com.goganesh.packages.service.IndexService;
 import com.goganesh.packages.service.LemmaService;
-import com.goganesh.packages.service.PageService;
 import lombok.AllArgsConstructor;
 import org.apache.lucene.morphology.LuceneMorphology;
 import org.apache.lucene.morphology.russian.RussianLuceneMorphology;
