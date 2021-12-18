@@ -12,7 +12,6 @@ public interface SiteService {
     void dropIndexPageBySite(Site site);
     void indexSitePageByUrl(String url);
 
-    Site save(Site site);
     List<Site> findAll();
     Optional<Site> findByUrl(String url);
     long countSites();

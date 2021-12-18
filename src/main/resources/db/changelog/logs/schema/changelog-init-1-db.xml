@@ -7,7 +7,7 @@
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
       http://www.liquibase.org/xml/ns/pro
       http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
-    <changeSet id="init-db" author="basiladze-gt">
+    <changeSet id="init-db-business-entity" author="basiladze-gt">
 
         <createTable tableName="sites" remarks="сайты">
             <column  name="id"  type="UUID">
@@ -72,33 +72,6 @@
                 <constraints  nullable="false"/>
             </column>
             <column  name="rank"  type="FLOAT" remarks="ранг леммы на этой страницы">
-                <constraints  nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="users" remarks="пользователи">
-            <column  name="id"  type="UUID">
-                <constraints  nullable="false"  primaryKey="true"  unique="true"/>
-            </column>
-            <column  name="username"  type="VARCHAR(255)" remarks="логин">
-                <constraints  nullable="false" unique="true"/>
-            </column>
-            <column  name="password"  type="VARCHAR(255)" remarks="пароль">
-                <constraints  nullable="false"/>
-            </column>
-            <column  name="is_enabled"  type="BOOLEAN" defaultValueBoolean="true" remarks="Признак активной учетки">
-                <constraints  nullable="false"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="authorities" remarks="привилегии пользователей">
-            <column  name="id"  type="UUID">
-                <constraints  nullable="false"  primaryKey="true"  unique="true"/>
-            </column>
-            <column name="user_id" type="UUID" remarks="идентификатор пользователя">
-                <constraints  nullable="false"/>
-            </column>
-            <column  name="authority"  type="VARCHAR(255)" remarks="привилегия">
                 <constraints  nullable="false"/>
             </column>
         </createTable>

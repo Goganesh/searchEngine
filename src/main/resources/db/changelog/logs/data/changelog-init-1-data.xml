@@ -23,6 +23,7 @@
             <column  name="weight"  value="0.8"/>
         </insert>
     </changeSet>
+
     <changeSet id="init-data-sites" author="basiladze-gt">
         <insert tableName="sites">
             <column name="id" value="9c1c7404-f113-4988-81b8-47edb62be1f8"/>
@@ -35,18 +36,5 @@
             <column name="url" value="http://yuksha.ru/" />
             <column name="name" value="Адвокат Янис Юкша"/>
         </insert>
-
-        <insert tableName="users">
-            <column name="id" value="e364a8c4-930b-420e-8551-ad69db98da92"/>
-            <column name="username" value="admin"/>
-            <column name="password" value="admin"/>
-        </insert>
-
-        <insert tableName="authorities">
-            <column name="id" value="99fab77f-bc7f-48e1-bc7a-c4378195f2d3"/>
-            <column name="user_id" value="e364a8c4-930b-420e-8551-ad69db98da92"/>
-            <column name="authority" value="ADMIN"/>
-        </insert>
-
     </changeSet>
 </databaseChangeLog>

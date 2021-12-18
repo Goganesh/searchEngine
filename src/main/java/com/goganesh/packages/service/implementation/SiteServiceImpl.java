@@ -123,11 +123,6 @@ public class SiteServiceImpl implements SiteService {
     }
 
     @Override
-    public Site save(Site site) {
-        return siteRepository.save(site);
-    }
-
-    @Override
     public Optional<Site> findByUrl(String url) {
         return siteRepository.findByUrl(url);
     }
