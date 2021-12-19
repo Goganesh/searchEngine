@@ -72,7 +72,6 @@ public class IndexController {
 
         if (processService.isProcessActive(ProcessService.Type.INDEX)) {
             processService.unblockProcess(ProcessService.Type.INDEX);
-
         } else {
             throw new ApiException(INACTIVE_PROCESS_ERROR, HttpStatus.OK);
         }

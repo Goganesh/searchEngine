@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@DisplayName("Тестирование кастомных запросов в IndexRepository")
+@DisplayName("Тестирование кастомных запросов - IndexRepository")
 class IndexRepositoryTest {
 
     @Autowired

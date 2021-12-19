@@ -6,6 +6,7 @@ import com.goganesh.packages.exception.NoIndexFoundException;
 import com.goganesh.packages.repository.IndexRepository;
 import com.goganesh.packages.service.IndexService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

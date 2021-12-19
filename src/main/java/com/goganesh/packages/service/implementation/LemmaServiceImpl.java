@@ -35,7 +35,6 @@ public class LemmaServiceImpl implements LemmaService {
 
         lemmas.stream()
                 .map(indexService::findByLemma)
-                //.filter() //exception
                 .flatMap(List::stream)
                 .forEach(index -> lemmasFrequency.merge(index.getLemma(), 1 , Integer::sum));
 

@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@DisplayName("Тестирование кастомных запросов в SiteRepository")
+@DisplayName("Тестирование кастомных запросов - SiteRepository")
 class SiteRepositoryTest {
 
     @Autowired
