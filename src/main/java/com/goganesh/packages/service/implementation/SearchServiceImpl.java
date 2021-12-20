@@ -58,30 +58,29 @@ public class SearchServiceImpl implements SearchService {
         if (finalPages.isEmpty())
             return new ArrayList<>();
 
-        List<SearchResult> rankedPages = new ArrayList<>();
+        return finalPages.stream()
+                .map(page -> SearchResult.builder()
+                        .uri(page.getPath())
+                        .siteName(page.getSite().getName())
+                        .site(page.getSite().getUrl())
+                        .title(webParser.getTextByPageAndField(page,"title"))
+                        .snippet(getSnippetByPageAndLemmas(page, sortedLemmas))
+                        .relevance(getRankByPageAndLemmas(page, sortedLemmas))
+                        .build())
+                .collect(Collectors.toList());
+    }
 
-        for (Page page : finalPages) {
-            Float finalRank = indexService.findByPage(page)
-                    .stream()
-                    .filter(index -> sortedLemmas.contains(index.getLemma()))
-                    .map(Index::getRank)
-                    .reduce(Float::sum)
-                    .orElse(0f);
+    private float getRankByPageAndLemmas(Page page, List<String> lemmas) {
+        return indexService.findByPage(page)
+                .stream()
+                .filter(index -> lemmas.contains(index.getLemma()))
+                .map(Index::getRank)
+                .reduce(Float::sum)
+                .orElse(0f);
+    }
 
-            SearchResult searchResult = SearchResult.builder()
-                    .uri(page.getPath())
-                    .siteName(page.getSite().getName())
-                    .site(page.getSite().getUrl())
-                    .title(webParser.getTextByPageAndField(page,"title"))
-                    .snippet("TODO") //todo требуется выполнить
-                    .relevance(finalRank) //todo требуется выполнить
-                    .build();
-            searchResult.setRelevance(finalRank);
-
-            rankedPages.add(searchResult);
-        }
-
-        return rankedPages;
+    private String getSnippetByPageAndLemmas(Page page, List<String> lemmas) {
+        return "TODO";
     }
 
 }
