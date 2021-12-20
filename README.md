@@ -89,7 +89,9 @@
 |  admin      | admin    |  ADMIN    |
 
 ## Как запустить
+
 ###Запуск приложения
+
 Для сборки и запуска приложения вам понадобиться:
 - JDK 11
 - Maven
@@ -106,6 +108,7 @@
 
 
 ###Создание БД в Docker
+
 1. Загрузка image БД PostgreSQL
 `docker pull postgres`
 2. Запуск контейнера `docker run --rm --name=myContainer --env="POSTGRES_PASSWORD=postgres1" --publish 5432:5432 -d postgres`
