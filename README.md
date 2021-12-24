@@ -109,8 +109,7 @@
 
 ### Создание БД в Docker
 
-1. Загрузка image БД PostgreSQL
-`docker pull postgres`
+1. Загрузка image БД PostgreSQL`docker pull postgres`
 2. Запуск контейнера `docker run --rm --name=myContainer --env="POSTGRES_PASSWORD=postgres1" --publish 5432:5432 -d postgres`
 3. Вызов контейнера `docker exec -it myContainer bash`
 4. Переключение на пользователя `su postgres`
@@ -118,6 +117,5 @@
 6. Создание базы данных для приложения `CREATE DATABASE search_engine`
 
 ### Параметры для Heroku
-https://skillbox.ru/media/base/kak-razmestit-spring-boot-prilozhenie-na-heroku-com-poshagovaya-instruktsiya/
+[Инструкция для запуска java приложения на Heroku](https://skillbox.ru/media/base/kak-razmestit-spring-boot-prilozhenie-na-heroku-com-poshagovaya-instruktsiya/)
 SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh;SPRING_DATASOURCE_USERNAME=nwbzloznxrrmjd;SPRING_DATASOURCE_PASSWORD=10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935d7
-    
