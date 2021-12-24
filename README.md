@@ -102,7 +102,7 @@
 `mvn clean install`
 
 Для запуска:
-`java -jar target/search-engine-1.0.0.jar`
+`java -jar target/search-engine-1.0-SNAPSHOT.jar`
 
 Для пользователей Windows может быть полезен git-bash, который является частью утилиты git [Скачать тут](https://git-scm.com/downloads)
 

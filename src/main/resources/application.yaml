@@ -16,12 +16,12 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/search_engine}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres}
     driverClassName: org.postgresql.Driver
     username: ${SPRING_DATASOURCE_USERN:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres1}
   liquibase:
-    enabled=: false
+    enabled: true
     change-log: classpath:db/changelog/changelog-root.xml
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
