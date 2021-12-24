@@ -21,6 +21,8 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <springdoc-version>1.6.0</springdoc-version>
+        <jsoup-version>1.14.3</jsoup-version>
     </properties>
     <dependencies>
         <dependency>
@@ -50,12 +52,12 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.0</version>
+            <version>${springdoc-version}</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.14.3</version>
+            <version>${jsoup-version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -83,7 +85,6 @@
             <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.lucene.morphology</groupId>
             <artifactId>dictionary-reader</artifactId>
@@ -123,7 +124,6 @@
             <version>1.5</version>
             <systemPath>${basedir}/libs/morphology-1.5.jar</systemPath>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -135,7 +135,6 @@
                     <mainClass>com.goganesh.packages.SearchEngineApp</mainClass>
                 </configuration>
                 <executions>
-
                     <execution>
                         <goals>
                             <goal>build-info</goal>
