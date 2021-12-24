@@ -12,16 +12,19 @@ logging:
     root: INFO
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/search_engine
-    username: postgres
-    password: postgres1
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/search_engine}
+    driverClassName: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERN:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres1}
   liquibase:
+    enabled=: false
     change-log: classpath:db/changelog/changelog-root.xml
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: none
     show-sql: false
