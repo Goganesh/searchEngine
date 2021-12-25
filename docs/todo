@@ -1,0 +1,2 @@
+1. при отсутствии индекса, программа прерывается - NoIndexFoundException: No such index found by lemma привет
+2. тесты
