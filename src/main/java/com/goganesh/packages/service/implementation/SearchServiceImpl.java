@@ -4,12 +4,15 @@ import com.goganesh.packages.domain.Index;
 import com.goganesh.packages.domain.Page;
 import com.goganesh.packages.domain.Site;
 import com.goganesh.packages.dto.SearchResult;
+import com.goganesh.packages.exception.NoIndexFoundException;
 import com.goganesh.packages.service.IndexService;
 import com.goganesh.packages.service.LemmaService;
 import com.goganesh.packages.service.SearchService;
 import com.goganesh.packages.service.WebParser;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SearchServiceImpl implements SearchService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchServiceImpl.class);
 
     private final LemmaService lemmaService;
     private final IndexService indexService;
@@ -28,7 +33,13 @@ public class SearchServiceImpl implements SearchService {
     public List<SearchResult> getSearchResultBySite(String searchText, Site site) {
         Set<String> searchLemmas = lemmaService.getLemmasByText(searchText);
 
-        Map<String, Integer> lemmasFrequency = lemmaService.getLemmasFrequency(searchLemmas);
+        Map<String, Integer> lemmasFrequency;
+        try {
+            lemmasFrequency = lemmaService.getLemmasFrequency(searchLemmas);
+        } catch (NoIndexFoundException e) {
+            LOGGER.debug(e.getMessage());
+            return new ArrayList<>();
+        }
 
         //todo Кроме того, рекомендуется исключать леммы, которые встречаются на слишком
         // большом количестве страниц (определите этот процент самостоятельно).
