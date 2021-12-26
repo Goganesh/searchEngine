@@ -9,9 +9,15 @@
 - [Навигация по проекту](#Навигация-по-проекту)
 - [Обзор технологий](#Обзор-технологий)
 - [Точки доступа](#Точки-доступа)
+  - [Адреса и порты](#Адреса-и-порты)
+  - [Учетные записи](#Учетные-записи)
 - [Как запустить](#Как-запустить)
   - [Запуск приложения](#Запуск-приложения)
-  - [Создание БД в Docker](#Создание-БД-в-Docker)
+  - [Frontend запросы](#Frontend-запросы)
+  - [Подключение к БД](#Подключение-к-БД)
+    - [Создание БД в Docker](#Создание-БД-в-Docker)
+  - [Запуск приложения на Heroku](#Запуск-приложения-на-Heroku)
+    - [Подключение к БД Heroku](#Подключение-к-БД-Heroku)
 
 ## Бизнес требования
 
@@ -106,9 +112,30 @@
 
 Для пользователей Windows может быть полезен git-bash, который является частью утилиты git [Скачать тут](https://git-scm.com/downloads)
 
+### Frontend запросы
 
-### Создание БД в Docker
+Вся информация подгружается на вкладки путём запросов страницы к
+API. Чтобы изменить источник данных - измените в коде страницы “index.html” значение переменной
+“backendApiUrl” на путь к хосту, на котором у вас размещено
+веб-приложение:
 
+var backendApiUrl = 'https://goganesh-search-engine.herokuapp.com/api'
+
+### Подключение к БД
+
+Переменные окружения для подключения к БД:
+- SPRING_DATASOURCE_URL
+- SPRING_DATASOURCE_USERNAME
+- SPRING_DATASOURCE_PASSWORD
+- SPRING_DATASOURCE_DRIVER
+
+Параметры подключения по умолчанию:
+- url: jdbc:postgresql://localhost:5432/postgres
+- driverClassName: org.postgresql.Driver
+- username: postgres
+- password: postgres1
+
+#### Создание БД в Docker
 1. Загрузка image БД PostgreSQL`docker pull postgres`
 2. Запуск контейнера `docker run --rm --name=myContainer --env="POSTGRES_PASSWORD=postgres1" --publish 5432:5432 -d postgres`
 3. Вызов контейнера `docker exec -it myContainer bash`
@@ -116,7 +143,22 @@
 5. Вызов консоли `psql`
 6. Создание базы данных для приложения `CREATE DATABASE search_engine;`
 
-### Параметры для Heroku
+### Запуск приложения на Heroku
 
 [Инструкция для запуска java приложения на Heroku](https://skillbox.ru/media/base/kak-razmestit-spring-boot-prilozhenie-na-heroku-com-poshagovaya-instruktsiya/)
-SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh;SPRING_DATASOURCE_USERNAME=nwbzloznxrrmjd;SPRING_DATASOURCE_PASSWORD=10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935d7
+
+
+#### Подключение к БД Heroku
+
+При создании БД в Heroku, будет создан параметры подключения в Config Vars приложения.
+Переменная подключения по умолчанию DATABASE_URL не подходит.
+
+Требуется создать свои переменные окружения для подключения к БД и заполнить значениями из DATABASE_URL.
+
+Пример:
+DATABASE_URL=postgres://nwbzloznxrrm:10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935@ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh
+
+SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh
+SPRING_DATASOURCE_USERNAME=nwbzloznxrrm
+SPRING_DATASOURCE_PASSWORD=10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935
+SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
