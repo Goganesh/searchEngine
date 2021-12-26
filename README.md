@@ -158,7 +158,7 @@ var backendApiUrl = 'https://goganesh-search-engine.herokuapp.com/api'
 Пример:
 DATABASE_URL=postgres://nwbzloznxrrm:10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935@ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh
 
-SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh
-SPRING_DATASOURCE_USERNAME=nwbzloznxrrm
-SPRING_DATASOURCE_PASSWORD=10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935
-SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
+- SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-52-18-185-208.eu-west-1.compute.amazonaws.com:5432/dftjbgo66eimqh
+- SPRING_DATASOURCE_USERNAME=nwbzloznxrrm
+- SPRING_DATASOURCE_PASSWORD=10d9a8893bc1eff8109844bf9601076e06824980ecf88453c6bbb40389a935
+- SPRING_DATASOURCE_DRIVER=org.postgresql.Driver
